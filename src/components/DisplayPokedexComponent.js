@@ -40,7 +40,10 @@ class DisplayPokedexComponent extends Component {
       //console.log("Sorting with key: ", key);
 
       let sorted1 = this.state.data.slice(0).sort((a, b) => {
-        console.log(`${a === undefined || b === undefined}`);
+        //console.log(`${a === undefined || b === undefined}`);
+        if (key === "id") {
+          return a.id - b.id;
+        }
         if (a === undefined && b === undefined) {
           return 0;
         }
@@ -54,7 +57,7 @@ class DisplayPokedexComponent extends Component {
           return -1;
         }
         if (a[key] === b[key]) {
-          return a.id < b.id ? 1 : -1;
+          return parseInt(a.id) < parseInt(b.id) ? 1 : -1;
         }
         //console.log(a[key], b[key]);
         return a[key] > b[key] ? 1 : -1;
