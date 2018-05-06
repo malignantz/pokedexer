@@ -1,0 +1,14 @@
+td.clickable:hover {
+  background-color: #dfdfdf;
+  cursor: pointer;
+}
+
+input {
+  border: 1px dashed black;
+}
+
+th:hover {
+  text-decoration: underline;
+  background-color: #dfdfdf;
+  cursor: pointer;
+}

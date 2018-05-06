@@ -1,18 +1,33 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import ComingSoonComponent from "./components/ComingSoonComponent";
+import DisplayPokedexComponent from "./components/DisplayPokedexComponent";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showTable: false
+    };
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div className="App" tabIndex={0}>
+        <header className="App-header">WHALOH.COM</header>
+        {!this.state.showTable ? (
+          <div>
+            <ComingSoonComponent />
+            <img src="/assets/whaloh_png.png" className="App-logo" alt="logo" />
+            <button onClick={() => this.setState({ showTable: true })}>
+              Demo ->
+            </button>
+          </div>
+        ) : (
+          <DisplayPokedexComponent />
+        )}
       </div>
     );
   }
