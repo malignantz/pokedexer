@@ -15,15 +15,13 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App" tabIndex={0}>
+      <div className="App container">
         <header className="App-header">WHALOH.COM</header>
         {!this.state.showTable ? (
           <div>
-            <ComingSoonComponent />
-            <img src="/assets/whaloh_png.png" className="App-logo" alt="logo" />
-            <button onClick={() => this.setState({ showTable: true })}>
-              Demo ->
-            </button>
+            <ComingSoonComponent
+              showTable={() => this.setState({ showTable: true })}
+            />
           </div>
         ) : (
           <DisplayPokedexComponent />

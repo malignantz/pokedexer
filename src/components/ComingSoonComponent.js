@@ -33,6 +33,17 @@ class ComingSoonComponent extends Component {
       <div>
         <p>Coming Soon</p>
         <h1>{this.state.dots}</h1>
+        <img src="/assets/whaloh_png.png" className="App-logo" alt="logo" />
+        <div>
+          <br />
+          <a
+            className="waves-effect waves-light btn"
+            onClick={() => this.props.showTable()}
+            href="#"
+          >
+            DEMO ->
+          </a>
+        </div>
       </div>
     );
   }
