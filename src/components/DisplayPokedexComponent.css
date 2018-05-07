@@ -12,3 +12,12 @@ th:hover {
   background-color: #dfdfdf;
   cursor: pointer;
 }
+
+table {
+  background-color: white;
+  border-radius: 5px;
+}
+
+div.whiteBg {
+  background-color: white;
+}

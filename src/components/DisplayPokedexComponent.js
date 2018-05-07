@@ -30,10 +30,6 @@ class DisplayPokedexComponent extends Component {
   }
 
   sort(key, compare) {
-    if (key.includes("T")) {
-      key = key.replace("T", "t");
-    }
-
     if (compare) {
       let sorted = this.state.data.sort(compare).slice(0);
       this.setState({ data: sorted });
@@ -180,7 +176,7 @@ class DisplayPokedexComponent extends Component {
           <div className="col s1">
             <i className="material-icons">search</i>
           </div>
-          <div className="col s8">
+          <div className="col s8 whiteBg">
             <input
               type="text"
               onChange={this.handleSearch}
@@ -199,7 +195,7 @@ class DisplayPokedexComponent extends Component {
             </a>
           </div>
         </div>
-        <table>
+        <table className="highlight z-depth-3">
           <tbody>
             {this.state.data.map(fig => (
               <tr key={fig.id + fig.name}>{this.makeTds(fig)}</tr>
