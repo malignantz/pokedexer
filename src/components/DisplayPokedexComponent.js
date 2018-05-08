@@ -1,4 +1,8 @@
 import React, { Component } from "react";
+import { Table, AutoSizer, Column } from "react-virtualized";
+
+import "react-virtualized/styles.css"; // only needs to be imported once
+
 import data from "./../pokedex.v0.3";
 import "./DisplayPokedexComponent.css";
 
@@ -15,18 +19,49 @@ class DisplayPokedexComponent extends Component {
     this.figureProps = [
       "id",
       "name",
-      "version",
-      "image",
+      //"version",
+      //"image",
       "type",
-      "attacks",
-      "ability",
       "movement",
-      "rarity"
+      "rarity",
+      "attacks",
+      //"ability",
+      "primaryType",
+      "secondaryType"
     ];
+    this.propWidth = {
+      id: 40,
+      name: 160,
+      type: 160,
+      movement: 20,
+      rarity: 30
+    };
+  }
+
+  componentWillMount() {
+    this.state.data.forEach(this.addTypeProp);
+    console.log(this.state.data[0]);
   }
 
   setFilter(key, prop = "") {
     this.handleSearch({ target: { value: `${key}:${prop}` } });
+  }
+
+  addTypeProp(fig) {
+    if (fig.secondaryType !== "") {
+      Object.assign(fig, { type: `${fig.primaryType} / ${fig.secondaryType}` });
+    } else {
+      fig.type = fig.primaryType;
+    }
+  }
+
+  displayFigure(fig) {
+    let result = Object.assign({}, fig);
+    let upcase = val => val.toUpperCase();
+    ["rarity", "type", "primaryType", "secondaryType"].forEach(prop => {
+      result[prop] = upcase(result[prop]);
+    });
+    return result;
   }
 
   sort(key, compare) {
@@ -81,14 +116,6 @@ class DisplayPokedexComponent extends Component {
     }
   }
 
-  makeThead(headers) {
-    return headers.map(header => (
-      <th onClick={() => this.sort(header)} key={header}>
-        {header}
-      </th>
-    ));
-  }
-
   handleSearch(e) {
     if (e === "") {
       this.setState({ search: "", data: data.figures });
@@ -99,7 +126,9 @@ class DisplayPokedexComponent extends Component {
     let rename = item => item.replace("t", "T");
     //console.log(dat.length);
     //if (this.figureProps.includes(search)) return;
-
+    if (search.includes("ytype:")) {
+      search = search.replace("t", "T");
+    }
     // filter search
     if (
       search.includes(":") &&
@@ -107,19 +136,16 @@ class DisplayPokedexComponent extends Component {
       search.split(":")[1].length > 0
     ) {
       const [keyname, prop] = search.split(":");
-      //let key = keyname.includes("type") ? rename(keyname) : keyname;
-      let key = keyname;
+      let key = keyname.includes("ytype") ? rename(keyname) : keyname;
+      //let key = keyname;
       // camelCase rename
-
+      console.log("121-", key, prop);
       //console.log(key, prop);
       dat = dat.filter(fig => {
         //console.log(fig, key, prop);
         if (key === "type") {
-          if (fig.type.includes("/")) {
-            const [prim, sec] = fig.type.split("/").map(this.trimBoth);
-            let prop1 = prop.toUpperCase();
-            return prim === prop1 || sec === prop1;
-          }
+          //console.log("126-", fig[key], prop);
+          return fig[key].includes(prop);
         }
         return key in fig ? fig[key].toLowerCase() === prop : false;
       });
@@ -139,49 +165,16 @@ class DisplayPokedexComponent extends Component {
     this.setState({ search, data: dat });
   }
 
-  makeTds(fig) {
-    if (fig.secondaryType) {
-      Object.assign(fig, {
-        type: `${fig.primaryType.toUpperCase()} / ${fig.secondaryType.toUpperCase()}`
-      });
-    } else {
-      Object.assign(fig, { type: fig.primaryType.toUpperCase() });
-    }
-    var filterTypes = ["movement", "rarity", "ability"];
-
-    var tds = ["id", "name", "type", "movement", "rarity"].map(
-      prop =>
-        filterTypes.includes(prop) ? (
-          <td
-            key={prop}
-            className="clickable"
-            onClick={() => this.setFilter(prop, fig[prop])}
-          >
-            {prop === "rarity" ? fig[prop].toUpperCase() : fig[prop]}
-          </td>
-        ) : (
-          <td key={prop}>{fig[prop]}</td>
-        )
-    );
-    return tds;
-  }
-
   render() {
-    //console.log(data.figures.map(fig => fig.id).join(""));
-    //this.makeRow = this.makeRowMaker();
-
     return (
       <div>
         <div className="row">
-          <div className="col s1">
-            <i className="material-icons">search</i>
-          </div>
-          <div className="col s8 whiteBg">
+          <div className="col s9 whiteBg">
             <input
               type="text"
               onChange={this.handleSearch}
               value={this.state.search}
-              placeholder="Search or click a box to filter"
+              placeholder="itar, id:420, type:rock"
               tabIndex="0"
             />
           </div>
@@ -195,13 +188,47 @@ class DisplayPokedexComponent extends Component {
             </a>
           </div>
         </div>
-        <table className="highlight z-depth-3">
-          <tbody>
-            {this.state.data.map(fig => (
-              <tr key={fig.id + fig.name}>{this.makeTds(fig)}</tr>
-            ))}
-          </tbody>
-        </table>
+
+        <div className="card">
+          <div className="data_container">
+            <div
+              style={{
+                flex: "1 1 auto",
+                height: "80vh"
+              }}
+            >
+              <AutoSizer>
+                {({ height, width }) => (
+                  <Table
+                    disableHeader
+                    rowClassName={({ index }) =>
+                      index % 2 === 1 ? "zrow" : "row zebra"
+                    }
+                    width={width}
+                    height={height}
+                    headerHeight={20}
+                    rowHeight={25}
+                    rowCount={this.state.data.length}
+                    rowGetter={({ index }) =>
+                      this.displayFigure(this.state.data[index])
+                    }
+                    sortBy="name"
+                  >
+                    {this.figureProps
+                      .slice(0, 6)
+                      .map(prop => (
+                        <Column
+                          label={prop}
+                          dataKey={prop}
+                          width={this.propWidth[prop] || 35}
+                        />
+                      ))}
+                  </Table>
+                )}
+              </AutoSizer>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

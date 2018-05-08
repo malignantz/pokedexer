@@ -21,3 +21,14 @@ table {
 div.whiteBg {
   background-color: white;
 }
+
+.zebra {
+  background-color: rgb(212, 240, 255);
+}
+.zrow {
+  background-color: rgb(174, 225, 252);
+}
+
+.data_container {
+  background-color: rgb(212, 240, 255);
+}
