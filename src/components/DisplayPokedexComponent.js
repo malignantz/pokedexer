@@ -3,7 +3,7 @@ import { Table, AutoSizer, Column } from "react-virtualized";
 
 import "react-virtualized/styles.css"; // only needs to be imported once
 
-import data from "./../pokedex.v0.3";
+import data from "./../pokedex.v0.4";
 import "./DisplayPokedexComponent.css";
 
 class DisplayPokedexComponent extends Component {
@@ -11,7 +11,7 @@ class DisplayPokedexComponent extends Component {
     super(props);
     this.handleSearch = this.handleSearch.bind(this);
     this.trimBoth = val => val.trimLeft().trim();
-
+    console.log(data.figures.length);
     this.state = {
       search: "",
       data: data.figures
@@ -207,7 +207,7 @@ class DisplayPokedexComponent extends Component {
                     width={width}
                     height={height}
                     headerHeight={20}
-                    rowHeight={25}
+                    rowHeight={40}
                     rowCount={this.state.data.length}
                     rowGetter={({ index }) =>
                       this.displayFigure(this.state.data[index])
